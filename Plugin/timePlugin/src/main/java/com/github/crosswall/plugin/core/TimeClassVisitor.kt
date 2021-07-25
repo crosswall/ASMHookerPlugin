@@ -1,13 +1,13 @@
 package com.github.crosswall.plugin.core
 
 import com.github.crosswall.plugin.bean.TraceMethod
-import com.github.crosswall.plugin.option.TimeClassOption
+import com.github.crosswall.plugin.option.HookerOption
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.commons.AdviceAdapter
 
-class TimeClassVisitor(api: Int, clzVisitor: ClassVisitor, private val option: TimeClassOption) :
+class TimeClassVisitor(api: Int, clzVisitor: ClassVisitor, private val option: HookerOption) :
     ClassVisitor(api, clzVisitor) {
 
     private var className: String? = null

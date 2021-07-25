@@ -33,7 +33,7 @@ android {
     }
 }
 
-timeClassOption {
+hookerOption {
     test = "hello"
     test2 = "world!"
 

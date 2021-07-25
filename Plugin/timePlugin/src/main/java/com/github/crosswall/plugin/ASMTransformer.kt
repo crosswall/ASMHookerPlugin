@@ -3,7 +3,7 @@ package com.github.crosswall.plugin
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
 import com.github.crosswall.plugin.core.TimeClassVisitor
-import com.github.crosswall.plugin.option.TimeClassOption
+import com.github.crosswall.plugin.option.HookerOption
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 import org.gradle.internal.impldep.org.apache.commons.codec.digest.DigestUtils
@@ -18,7 +18,7 @@ import java.io.IOException
 import java.util.jar.JarFile
 import java.util.jar.JarOutputStream
 
-class ASMTransformer(private val project: Project, private val option: TimeClassOption) :
+class ASMTransformer(private val project: Project, private val option: HookerOption) :
     Transform() {
 
     override fun getName(): String = "time-class-transform"

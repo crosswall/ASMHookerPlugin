@@ -1,7 +1,7 @@
 package com.github.crosswall.plugin.option
 
 
-open class TimeClassOption {
+open class HookerOption {
 
     companion object {
         val FILTER_CLASS_LIST = listOf("R.class", "R$", "Manifest", "BuildConfig")
