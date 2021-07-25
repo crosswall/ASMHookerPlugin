@@ -93,11 +93,7 @@ class TimeClassTransformer(private val project: Project, private val option: Tim
     }
 
     private fun hookJarFiles(jarInput: JarInput, outputProvider: TransformOutputProvider) {
-        //处理完输出给下一任务作为输入
-        val dest = outputProvider.getContentLocation(
-            jarName + md5Name,
-            jarInput.contentTypes, jarInput.scopes, Format.JAR
-        )
+
 
         if (jarInput.file.absolutePath.endsWith(".jar")) {
             var jarName = jarInput.name
@@ -106,6 +102,11 @@ class TimeClassTransformer(private val project: Project, private val option: Tim
             if (jarName.endsWith(".jar")) {
                 jarName = jarName.substring(0, jarName.length - 4)
             }
+
+            val dest = outputProvider.getContentLocation(
+                jarName + md5Name,
+                jarInput.contentTypes, jarInput.scopes, Format.JAR
+            )
 
             val jarFile = JarFile(jarInput.file)
             val enumeration = jarFile.entries()
