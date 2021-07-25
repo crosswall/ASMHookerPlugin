@@ -64,6 +64,12 @@ class TimeClassTransformer(private val project: Project, private val option: Tim
         outputProvider: TransformOutputProvider
     ) {
 
+        val dest = outputProvider.getContentLocation(
+            dirInput.name,
+            dirInput.contentTypes, dirInput.scopes,
+            Format.DIRECTORY
+        )
+
         if (dirInput.file.isDirectory) {
             dirInput.file
                 .walkTopDown()
@@ -76,25 +82,23 @@ class TimeClassTransformer(private val project: Project, private val option: Tim
                         val cv = TimeClzVisitor(Opcodes.ASM5, clzWriter, option)
                         clzReader.accept(cv, ClassReader.EXPAND_FRAMES)
                         val byteArray = clzWriter.toByteArray()
-                        val fos = FileOutputStream(
-                            f.parentFile.absolutePath + File.separator + name
-                        )
+                        val fos = FileOutputStream(f.parentFile.absolutePath + File.separator + f.name)
                         fos.write(byteArray)
                         fos.close()
                     }
                 }
         }
 
-
-        val dest = outputProvider.getContentLocation(
-            dirInput.name,
-            dirInput.contentTypes, dirInput.scopes,
-            Format.DIRECTORY
-        )
         FileUtils.copyDirectory(dirInput.file, dest)
     }
 
     private fun hookJarFiles(jarInput: JarInput, outputProvider: TransformOutputProvider) {
+        //处理完输出给下一任务作为输入
+        val dest = outputProvider.getContentLocation(
+            jarName + md5Name,
+            jarInput.contentTypes, jarInput.scopes, Format.JAR
+        )
+
         if (jarInput.file.absolutePath.endsWith(".jar")) {
             var jarName = jarInput.name
             val md5Name = DigestUtils.md5Hex(jarInput.file.absolutePath)
@@ -137,11 +141,7 @@ class TimeClassTransformer(private val project: Project, private val option: Tim
             jarOutputStream.close()
             jarFile.close()
 
-            //处理完输出给下一任务作为输入
-            val dest = outputProvider.getContentLocation(
-                jarName + md5Name,
-                jarInput.contentTypes, jarInput.scopes, Format.JAR
-            )
+
             FileUtils.copyFile(tmpFile, dest)
 
             tmpFile.delete()
