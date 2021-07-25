@@ -1,12 +1,13 @@
 package com.github.crosswall.plugin.core
 
+import com.github.crosswall.plugin.bean.TraceMethod
 import com.github.crosswall.plugin.option.TimeClassOption
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.commons.AdviceAdapter
 
-class TimeClzVisitor(api: Int, clzVisitor: ClassVisitor, private val option: TimeClassOption) :
+class TimeClassVisitor(api: Int, clzVisitor: ClassVisitor, private val option: TimeClassOption) :
     ClassVisitor(api, clzVisitor) {
 
     private var className: String? = null
@@ -33,9 +34,6 @@ class TimeClzVisitor(api: Int, clzVisitor: ClassVisitor, private val option: Tim
         name?.let {
             isTraceClass = option.isConfigTraceClass(it.replace("/", "."))
         }
-        // println("==========TimeClzVisitor=========")
-        //  println("className: $className")
-        //  println("isABSClass: $isABSClass - isBeatClass: $isBeatClass - isTraceClass: $isTraceClass")
     }
 
 
@@ -59,7 +57,6 @@ class TimeClzVisitor(api: Int, clzVisitor: ClassVisitor, private val option: Tim
             else -> {
                 val mv = cv.visitMethod(access, name, desc, signature, exceptions)
 
-                //TimeMethodVisitor(api, mv, access, name, desc, className, option)
 
                 TimeMethodVisitor(api, mv, access, name, desc, className)
             }
@@ -83,7 +80,8 @@ class TimeClzVisitor(api: Int, clzVisitor: ClassVisitor, private val option: Tim
         private var beatClass = ""
 
         init {
-            methodName = className?.replace("/", ".") + "." + name
+            val traceMethod = TraceMethod.create(0, access, className, name, desc)
+            this.methodName = traceMethod.getMethodNameText()
             option.mBeatClass?.let { beatClass = it.replace(".", "/") }
         }
 
@@ -92,13 +90,7 @@ class TimeClzVisitor(api: Int, clzVisitor: ClassVisitor, private val option: Tim
             super.onMethodEnter()
             println("onMethodEnter...$methodName  ===  $beatClass/start")
             mv.visitLdcInsn(methodName)
-            mv.visitMethodInsn(
-                Opcodes.INVOKESTATIC,
-                beatClass,
-                "start",
-                "(Ljava/lang/String;)V)",
-                false
-            )
+            mv.visitMethodInsn(INVOKESTATIC, beatClass, "start", "(Ljava/lang/String;)V", false)
 
         }
 
@@ -107,14 +99,7 @@ class TimeClzVisitor(api: Int, clzVisitor: ClassVisitor, private val option: Tim
             super.onMethodExit(opcode)
             println("onMethodExit...$methodName  ===  $beatClass/end")
             mv.visitLdcInsn(methodName)
-            mv.visitMethodInsn(
-                Opcodes.INVOKESTATIC,
-                beatClass,
-                "end",
-                "(Ljava/lang/Object;)V",
-                false
-            )
-
+            mv.visitMethodInsn(INVOKESTATIC, beatClass, "end", "(Ljava/lang/String;)V", false)
         }
     }
 }

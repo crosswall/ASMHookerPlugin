@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'time-plugin'
+    id 'asm-hooker-plugin'
 }
 
 android {
@@ -39,7 +39,7 @@ timeClassOption {
 
     setBeatClass("com.github.crosswall.app.Test")
 
-    addPackageList('com.github.crosswall')
+    addPackageList('com.github.crosswall.app')
 }
 
 

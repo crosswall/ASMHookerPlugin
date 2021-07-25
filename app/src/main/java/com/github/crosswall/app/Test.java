@@ -2,13 +2,19 @@ package com.github.crosswall.app;
 
 import android.util.Log;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Test {
 
+    private static Map<String,Long> startMap = new HashMap<>();
+
     public static void start(String name){
-        Log.d("Test","enter: " + name + " - " + System.currentTimeMillis());
+        startMap.put(name,System.currentTimeMillis());
     }
 
     public static void end(String name){
-        Log.d("Test","exit: " + name + " - " + System.currentTimeMillis());
+        long cost =  System.currentTimeMillis() - startMap.get(name);
+        Log.d("Test","测试方法耗时====>>> " + name + " ---- " + cost + "ms");
     }
 }

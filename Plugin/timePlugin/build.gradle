@@ -3,6 +3,13 @@ apply plugin: 'kotlin'
 apply plugin: 'java-gradle-plugin'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'maven'
+//plugins{
+//    id: 'groovy'
+//    id: 'java-gradle-plugi'
+//    id: 'kotlin'
+//    id: 'kotlin-kapt'
+//    id: 'maven'
+//}
 //apply from: '../upload_bintray.gradle'
 
 dependencies {
@@ -18,8 +25,8 @@ dependencies {
 uploadArchives {
     repositories.mavenDeployer {
         repository(url: uri('../repo'))
-        pom.groupId = "com.yy.yylite.plugin"
-        pom.artifactId = "LitePlugin"
+        pom.groupId = "com.github.crosswall.plugin"
+        pom.artifactId = "AMSTestPlugin"
         pom.version = "0.0.1"
     }
 }
@@ -29,9 +36,9 @@ gradlePlugin {
     plugins {
         version {
             // 在 app 模块需要通过 id 引用这个插件
-            id = 'time-plugin'
+            id = 'asm-hooker-plugin'
             // 实现这个插件的类的路径
-            implementationClass = 'com.github.crosswall.plugin.TimePlugin'
+            implementationClass = 'com.github.crosswall.plugin.ASMHookerPlugin'
         }
     }
 }

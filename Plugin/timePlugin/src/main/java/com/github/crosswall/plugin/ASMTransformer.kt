@@ -2,7 +2,7 @@ package com.github.crosswall.plugin
 
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
-import com.github.crosswall.plugin.core.TimeClzVisitor
+import com.github.crosswall.plugin.core.TimeClassVisitor
 import com.github.crosswall.plugin.option.TimeClassOption
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
@@ -15,11 +15,10 @@ import org.objectweb.asm.Opcodes
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import java.util.jar.JarOutputStream
 
-class TimeClassTransformer(private val project: Project, private val option: TimeClassOption) :
+class ASMTransformer(private val project: Project, private val option: TimeClassOption) :
     Transform() {
 
     override fun getName(): String = "time-class-transform"
@@ -34,12 +33,6 @@ class TimeClassTransformer(private val project: Project, private val option: Tim
 
     @Throws(TransformException::class, InterruptedException::class, IOException::class)
     override fun transform(transformInvocation: TransformInvocation?) {
-
-
-        println("======================================================")
-        println("================TimeClassTransformer==================")
-        println("================${option.test} - ${option.test2}=================")
-        println("======================================================")
 
         val inputs = transformInvocation?.inputs ?: return
         val outputProvider = transformInvocation?.outputProvider ?: return
@@ -56,7 +49,6 @@ class TimeClassTransformer(private val project: Project, private val option: Tim
                 hookJarFiles(jarInput, outputProvider)
             }
         }
-        // super.transform(transformInvocation)
     }
 
     private fun hookSourceSetFiles(
@@ -79,7 +71,7 @@ class TimeClassTransformer(private val project: Project, private val option: Tim
                         //字节码插桩
                         val clzReader = ClassReader(f.readBytes())
                         val clzWriter = ClassWriter(clzReader, ClassWriter.COMPUTE_MAXS)
-                        val cv = TimeClzVisitor(Opcodes.ASM5, clzWriter, option)
+                        val cv = TimeClassVisitor(Opcodes.ASM5, clzWriter, option)
                         clzReader.accept(cv, ClassReader.EXPAND_FRAMES)
                         val byteArray = clzWriter.toByteArray()
                         val fos = FileOutputStream(f.parentFile.absolutePath + File.separator + f.name)
@@ -128,7 +120,7 @@ class TimeClassTransformer(private val project: Project, private val option: Tim
                     //字节码插桩
                     val clzReader = ClassReader(IOUtils.toByteArray(inputStream))
                     val clzWriter = ClassWriter(clzReader, ClassWriter.COMPUTE_MAXS)
-                    val cv = TimeClzVisitor(Opcodes.ASM5, clzWriter, option)
+                    val cv = TimeClassVisitor(Opcodes.ASM5, clzWriter, option)
                     clzReader.accept(cv, ClassReader.EXPAND_FRAMES)
                     val byteArray = clzWriter.toByteArray()
                     jarOutputStream.write(byteArray)

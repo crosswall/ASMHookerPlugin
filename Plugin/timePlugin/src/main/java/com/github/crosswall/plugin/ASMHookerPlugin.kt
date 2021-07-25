@@ -6,23 +6,23 @@ import com.github.crosswall.plugin.option.TimeClassOption
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-class TimePlugin : Plugin<Project> {
+class ASMHookerPlugin : Plugin<Project> {
 
 
     override fun apply(project: Project) {
         println("======================================================")
-        println("================TimePlugin apply======================")
+        println("===============ASMHookerPlugin apply==================")
         println("======================================================")
 
         val option = project.extensions.create("timeClassOption", TimeClassOption::class.java)
 
-        println("================TimePlugin create======================")
+        println("================ASMHookerPlugin create=================")
 
 
         val isApp = project.plugins.hasPlugin(AppPlugin::class.java)
         if (isApp) {
             val appExtension = project.extensions.getByType(AppExtension::class.java)
-            appExtension.registerTransform(TimeClassTransformer(project, option))
+            appExtension.registerTransform(ASMTransformer(project, option))
         }
 
     }
