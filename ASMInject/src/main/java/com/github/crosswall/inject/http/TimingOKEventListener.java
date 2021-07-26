@@ -1,7 +1,8 @@
 package com.github.crosswall.inject.http;
 
 import android.os.SystemClock;
-import android.util.Log;
+
+import com.github.crosswall.inject.InjectLog;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -13,7 +14,7 @@ import okhttp3.EventListener;
 
 public class TimingOKEventListener extends EventListener{
 
-    private static final String TAG = "TimingTrace";
+
 
     public static final EventListener.Factory FACTORY =  new EventListener.Factory() {
 
@@ -60,7 +61,7 @@ public class TimingOKEventListener extends EventListener{
         String from = isNewConnection ? "newest connection" : "pooled connection";
         String url = call.request().url().toString();
         String result = String.format("%04d %s Call From %s costs %.3f ms, url %s", callId, success ? "Success" : "Fail", from, elapsed, url);
-        Log.i(TAG, "测试请求耗时====>>>" + result);
+        InjectLog.d("TimingOKHttp 测试请求耗时====>>>" + result);
     }
 
 }
