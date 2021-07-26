@@ -2,6 +2,7 @@ package com.github.crosswall.plugin
 
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
+import com.github.crosswall.plugin.core.OkHttpClassVisitor
 import com.github.crosswall.plugin.core.TimeClassVisitor
 import com.github.crosswall.plugin.option.HookerOption
 import org.apache.commons.io.FileUtils
@@ -21,7 +22,7 @@ import java.util.jar.JarOutputStream
 class ASMTransformer(private val project: Project, private val option: HookerOption) :
     Transform() {
 
-    override fun getName(): String = "time-class-transform"
+    override fun getName(): String = "asm-hooker-transform"
 
     override fun getInputTypes(): MutableSet<QualifiedContent.ContentType> =
         TransformManager.CONTENT_CLASS
@@ -71,10 +72,13 @@ class ASMTransformer(private val project: Project, private val option: HookerOpt
                         //字节码插桩
                         val clzReader = ClassReader(f.readBytes())
                         val clzWriter = ClassWriter(clzReader, ClassWriter.COMPUTE_MAXS)
-                        val cv = TimeClassVisitor(Opcodes.ASM5, clzWriter, option)
+
+                        val cv = if (f.name.contains("okhttp3"))
+                            OkHttpClassVisitor(Opcodes.ASM6, clzWriter) else TimeClassVisitor(Opcodes.ASM6, clzWriter, option)
                         clzReader.accept(cv, ClassReader.EXPAND_FRAMES)
                         val byteArray = clzWriter.toByteArray()
-                        val fos = FileOutputStream(f.parentFile.absolutePath + File.separator + f.name)
+                        val fos =
+                            FileOutputStream(f.parentFile.absolutePath + File.separator + f.name)
                         fos.write(byteArray)
                         fos.close()
                     }
@@ -120,7 +124,8 @@ class ASMTransformer(private val project: Project, private val option: HookerOpt
                     //字节码插桩
                     val clzReader = ClassReader(IOUtils.toByteArray(inputStream))
                     val clzWriter = ClassWriter(clzReader, ClassWriter.COMPUTE_MAXS)
-                    val cv = TimeClassVisitor(Opcodes.ASM5, clzWriter, option)
+                    val cv = if (entryName.contains("okhttp3"))
+                        OkHttpClassVisitor(Opcodes.ASM6, clzWriter) else TimeClassVisitor(Opcodes.ASM6, clzWriter, option)
                     clzReader.accept(cv, ClassReader.EXPAND_FRAMES)
                     val byteArray = clzWriter.toByteArray()
                     jarOutputStream.write(byteArray)

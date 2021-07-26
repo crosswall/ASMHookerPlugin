@@ -56,8 +56,6 @@ class TimeClassVisitor(api: Int, clzVisitor: ClassVisitor, private val option: H
             )
             else -> {
                 val mv = cv.visitMethod(access, name, desc, signature, exceptions)
-
-
                 TimeMethodVisitor(api, mv, access, name, desc, className)
             }
         }

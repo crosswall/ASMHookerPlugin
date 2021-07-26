@@ -1,3 +1,4 @@
 include ':app'
+include ':ASMInject'
 includeBuild('./Plugin')
 rootProject.name = "ASMPluginTest"

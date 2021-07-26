@@ -10,21 +10,23 @@
               <build path="$PROJECT_DIR$/Plugin" name="Plugin">
                 <projects>
                   <project path="$PROJECT_DIR$/Plugin" />
-                  <project path="$PROJECT_DIR$/Plugin/timePlugin" />
+                  <project path="$PROJECT_DIR$/Plugin/ASMHookerPlugin" />
                 </projects>
               </build>
             </builds>
           </compositeBuild>
         </compositeConfiguration>
         <option name="testRunner" value="PLATFORM" />
+        <option name="disableWrapperSourceDistributionNotification" value="true" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleJvm" value="1.8 (2)" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/ASMInject" />
             <option value="$PROJECT_DIR$/Plugin" />
-            <option value="$PROJECT_DIR$/Plugin/timePlugin" />
+            <option value="$PROJECT_DIR$/Plugin/ASMHookerPlugin" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
