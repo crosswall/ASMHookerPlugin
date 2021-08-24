@@ -1,6 +1,6 @@
 ### 简单的ASM工具集合
 
-使用compose building可直接调试
+使用composing builds可直接调试
 
 #### 如何调试gradle 
 ```code
